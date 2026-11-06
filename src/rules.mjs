@@ -105,7 +105,9 @@ export function check(html) {
     if (name === 'button' && !hasName(element) && !hasContent(element)) {
       report(element, 'empty-button', '<button> has no text: add text or aria-label');
     }
-    if (name === 'a' && 'href' in attributes && !hasName(element) && !hasContent(element)) {
+    // A link hidden from assistive tech and the keyboard (Pandoc's code line anchors) needs no name.
+    const hidden = attributes['aria-hidden'] === 'true' && attributes.tabindex === '-1';
+    if (name === 'a' && 'href' in attributes && !hidden && !hasName(element) && !hasContent(element)) {
       report(element, 'empty-link', `<a href="${attributes.href.slice(0, 40)}"> has no text: add text or aria-label`);
     }
 
