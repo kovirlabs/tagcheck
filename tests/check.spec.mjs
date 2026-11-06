@@ -51,6 +51,17 @@ test.describe('static rules', () => {
     expect(rules(page('<pre><code class="language-js"><span class="hljs-keyword">const</span></code></pre>'))).toEqual([]);
   });
 
+  test('Markdown tool output (Pandoc, Jekyll, GitHub) is not reported', () => {
+    const pandoc = '<link rel="stylesheet" href="tagbrush.css"><h2>A</h2><p>Text<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>' +
+      '<div class="sourceCode" id="cb1"><pre class="sourceCode js"><code class="sourceCode javascript"><span class="kw">const</span></code></pre></div>' +
+      '<table><thead><tr><th style="text-align: right;">N</th></tr></thead><tbody><tr><td style="text-align: right;">1</td></tr></tbody></table>' +
+      '<ul class="task-list"><li><label><input type="checkbox" checked>Done</label></li></ul><span class="math inline">x</span>' +
+      '<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code>x</code></pre></div></div>' +
+      '<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><ol><li id="fn1"><p>Note.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩</a></p></li></ol></section>';
+    expect(rules(page(pandoc))).toEqual([]);
+    expect(rules(page('<link rel="stylesheet" href="tagbrush.css"><td style="width: 50%">x</td>'))).toEqual(['warning:inline-style']);
+  });
+
   test('other data-* attributes are the page\'s own business', () => {
     expect(rules(page('<div data-user-id="7" data-testid="x">Hi</div>'))).toEqual([]);
   });

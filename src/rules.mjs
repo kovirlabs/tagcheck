@@ -1,7 +1,7 @@
 // Static checks: read HTML source, report problems. No browser needed.
 
 import { parse, ancestors } from './parse.mjs';
-import { CLASSES, ATTRIBUTES, COMMANDS, BUILT_IN_COMMANDS, isFamilyAttribute } from './vocabulary.mjs';
+import { CLASSES, ATTRIBUTES, COMMANDS, BUILT_IN_COMMANDS, isFamilyAttribute, isGeneratedClass } from './vocabulary.mjs';
 
 const NAMED_BY_ATTRIBUTE = ['aria-label', 'aria-labelledby', 'title'];
 const UNLABELED_INPUT_TYPES = new Set(['hidden', 'submit', 'button', 'reset', 'image']);
@@ -90,7 +90,7 @@ export function check(html) {
   let previousHeading = 0;
   for (const element of elements) {
     const { name, attributes } = element;
-    const inCode = [...ancestors(element)].some((a) => a.name === 'pre' || a.name === 'code');
+    const inCode = [element, ...ancestors(element)].some((a) => a.name === 'pre' || a.name === 'code');
 
     if (name === 'img' && !('alt' in attributes)) {
       report(element, 'missing-alt', `<img src="${attributes.src?.slice(0, 40) ?? ''}"> needs alt text (alt="" if it's decorative)`);
@@ -145,7 +145,7 @@ export function check(html) {
 
     // The family's vocabulary.
     if (attributes.class !== undefined && !inCode) {
-      const unknown = attributes.class.split(/\s+/).filter((c) => c && !CLASSES.has(c));
+      const unknown = attributes.class.split(/\s+/).filter((c) => c && !CLASSES.has(c) && !isGeneratedClass(c));
       if (unknown.length) report(element, 'unknown-class', `class="${unknown.join(' ')}" isn't part of TagBrush.css or TagAction: semantic HTML usually does the job`);
     }
     for (const [key, value] of Object.entries(attributes)) {
@@ -166,7 +166,9 @@ export function check(html) {
     }
 
     if (usesTagBrush && attributes.style !== undefined) {
-      const properties = cssProperties(`{${attributes.style}}`);
+      // Column alignment in tables is content, not layout (Markdown tables emit it).
+      const properties = cssProperties(`{${attributes.style}}`)
+        .filter((property) => !(property === 'text-align' && (name === 'th' || name === 'td')) && !(property === 'width' && name === 'col'));
       if (properties.length) report(element, 'inline-style', `style sets ${properties.join(', ')}: with TagBrush.css only CSS variables should be needed`);
     }
     if (usesTagBrush && name === 'style') {

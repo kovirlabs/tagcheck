@@ -6,6 +6,20 @@
 export const CLASSES = new Set(['button', 'secondary', 'outline', 'container', 'grid', 'card', 'striped', 'visually-hidden', 'tagbrush']);
 
 /**
+ * Classes that Markdown converters (Pandoc, kramdown/Jekyll, GitHub, Hugo)
+ * put in their output. Page authors don't write them, and TagBrush.css
+ * handles them, so they aren't "invented". Classes inside <pre> and <code>
+ * (syntax highlighting) are always allowed.
+ */
+export const GENERATED_CLASSES = new Set([
+  'sourceCode', 'footnotes', 'footnotes-end-of-document', 'footnote-ref', 'footnote-back', 'footnote', 'reversefootnote',
+  'task-list', 'task-list-item', 'task-list-item-checkbox', 'contains-task-list', 'math', 'inline', 'display',
+  'highlight', 'highlighter-rouge', 'chroma', 'astro-code', 'shiki',
+]);
+export const GENERATED_CLASS_PREFIXES = ['language-', 'highlight-'];
+export const isGeneratedClass = (name) => GENERATED_CLASSES.has(name) || GENERATED_CLASS_PREFIXES.some((prefix) => name.startsWith(prefix));
+
+/**
  * data-* attributes in the family namespaces (data-tag…, plus TagBrush's own),
  * with the values they accept (null: any value, '': no value needed).
  */

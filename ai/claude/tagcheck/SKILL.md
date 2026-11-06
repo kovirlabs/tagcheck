@@ -51,10 +51,10 @@ Warnings:
 - `missing-viewport`: add `<meta name="viewport" content="width=device-width, initial-scale=1">`.
 - `heading-skip`: don't jump from `<h2>` to `<h4>`.
 - `remember-needs-id`: a `<details>` under `data-tag-remember` needs an `id`.
-- `unknown-class`: a class TagBrush.css doesn't style. TagBrush documents only `button`, `secondary`, `outline`, `container`, `grid`, `card`, `striped`, `visually-hidden`, and `tagbrush`. Classes inside `<pre>` and `<code>` (syntax highlighting) are fine.
+- `unknown-class`: a class TagBrush.css doesn't style. TagBrush documents only `button`, `secondary`, `outline`, `container`, `grid`, `card`, `striped`, `visually-hidden`, and `tagbrush`. Classes inside `<pre>` and `<code>` (syntax highlighting) are fine, and so are the classes Markdown tools such as Pandoc and Jekyll generate (`sourceCode`, `footnotes`, `task-list`, `highlight`, `language-…`, …).
 - `unknown-attribute`: a `data-tag…` attribute (or TagBrush's `data-theme`, `data-layout`, `data-tone`) or value that isn't documented. Other `data-*` attributes are the page's own and are not checked.
 - `generated-markup`: `data-tag="…"` is added by TagAction while the page runs; it doesn't belong in source HTML.
-- `inline-style`, `style-block`: on a page that uses TagBrush.css, CSS other than variables (layout, spacing, colors) usually isn't needed.
+- `inline-style`, `style-block`: on a page that uses TagBrush.css, CSS other than variables (layout, spacing, colors) usually isn't needed. `text-align` on table cells (column alignment) is fine.
 
 ## Use it from code
 
