@@ -92,7 +92,7 @@ test.describe('family pages are clean', () => {
   const sibling = (path) => (existsSync(path) ? path : null);
 
   test('TagBrush agent-written pages and starter', async () => {
-    const paths = [sibling('../../tagbrush/evals/pages'), sibling('../../tagbrush/starter.html')].filter(Boolean);
+    const paths = [sibling('../tagbrush/evals/pages'), sibling('../tagbrush/starter.html')].filter(Boolean);
     test.skip(!paths.length, 'TagBrush checkout not next to this repo');
     const report = await checkFiles(paths);
     expect(report.files.flatMap((f) => f.problems.map((p) => `${f.file}:${p.line} ${p.rule}`))).toEqual([]);
