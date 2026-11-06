@@ -67,5 +67,6 @@ await checkFiles(['site/'], { browser: true });    // the same report as --json
 
 ## Links
 
+- [The Tag family](https://kovirlabs.github.io/tagstack/llms.txt): how TagBrush.css, TagAction, and TagCheck fit together
 - [README](https://github.com/kovirlabs/tagcheck#readme)
 - [TagBrush.css](https://github.com/kovirlabs/tagbrush) and [TagAction](https://github.com/kovirlabs/tagaction): the libraries whose vocabulary TagCheck knows
