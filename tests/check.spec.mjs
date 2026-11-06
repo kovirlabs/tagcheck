@@ -54,7 +54,7 @@ test.describe('static rules', () => {
   test('Markdown tool output (Pandoc, Jekyll, GitHub) is not reported', () => {
     const pandoc = '<link rel="stylesheet" href="tagbrush.css"><h2>A</h2><p>Text<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>' +
       '<div class="sourceCode" id="cb1"><pre class="sourceCode js"><code class="sourceCode javascript"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span></span></code></pre></div>' +
-      '<table><thead><tr><th style="text-align: right;">N</th></tr></thead><tbody><tr><td style="text-align: right;">1</td></tr></tbody></table>' +
+      '<table><thead><tr class="header"><th style="text-align: right;">N</th></tr></thead><tbody><tr class="odd"><td style="text-align: right;">1</td></tr><tr class="even"><td>2</td></tr></tbody></table>' +
       '<ul class="task-list"><li><label><input type="checkbox" checked>Done</label></li></ul>' +
       '<ul class="task-list"><li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" checked="checked" />Done</li></ul><span class="math inline">x</span>' +
       '<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code>x</code></pre></div></div>' +
@@ -63,6 +63,7 @@ test.describe('static rules', () => {
     expect(rules(page('<link rel="stylesheet" href="tagbrush.css"><td style="width: 50%">x</td>'))).toEqual(['warning:inline-style']);
     expect(rules(page('<a href="#x" aria-hidden="true"></a><p id="x">x</p>'))).toEqual(['error:empty-link']); // still focusable
     expect(rules(page('<input type="checkbox" class="task-list-item-checkbox">'))).toEqual(['error:unlabeled-field']); // not disabled: a real form field
+    expect(rules(page('<p class="odd">x</p>'))).toEqual(['warning:unknown-class']); // row classes only count on rows
   });
 
   test('other data-* attributes are the page\'s own business', () => {

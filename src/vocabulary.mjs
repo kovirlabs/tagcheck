@@ -16,8 +16,10 @@ export const GENERATED_CLASSES = new Set([
   'task-list', 'task-list-item', 'task-list-item-checkbox', 'contains-task-list', 'math', 'inline', 'display',
   'highlight', 'highlighter-rouge', 'chroma', 'astro-code', 'shiki',
 ]);
+/** Row classes older Pandoc versions (before 3.2) put on table rows. */
+export const GENERATED_ROW_CLASSES = new Set(['header', 'odd', 'even']);
 export const GENERATED_CLASS_PREFIXES = ['language-', 'highlight-'];
-export const isGeneratedClass = (name) => GENERATED_CLASSES.has(name) || GENERATED_CLASS_PREFIXES.some((prefix) => name.startsWith(prefix));
+export const isGeneratedClass = (name, element) => GENERATED_CLASSES.has(name) || (element === 'tr' && GENERATED_ROW_CLASSES.has(name)) || GENERATED_CLASS_PREFIXES.some((prefix) => name.startsWith(prefix));
 
 /**
  * data-* attributes in the family namespaces (data-tag…, plus TagBrush's own),

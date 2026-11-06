@@ -149,7 +149,7 @@ export function check(html) {
 
     // The family's vocabulary.
     if (attributes.class !== undefined && !inCode) {
-      const unknown = attributes.class.split(/\s+/).filter((c) => c && !CLASSES.has(c) && !isGeneratedClass(c));
+      const unknown = attributes.class.split(/\s+/).filter((c) => c && !CLASSES.has(c) && !isGeneratedClass(c, name));
       if (unknown.length) report(element, 'unknown-class', `class="${unknown.join(' ')}" isn't part of TagBrush.css or TagAction: semantic HTML usually does the job`);
     }
     for (const [key, value] of Object.entries(attributes)) {
