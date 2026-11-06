@@ -36,7 +36,7 @@ Errors:
 - `missing-lang`: `<html>` needs `lang="en"` (or the page's language).
 - `multiple-main`: only one visible `<main>`.
 - `missing-alt`: every `<img>` needs `alt`; use `alt=""` for decoration.
-- `unlabeled-field`: every input, select, and textarea needs a `<label for>`, a wrapping `<label>`, `aria-label`, or `aria-labelledby`.
+- `unlabeled-field`: every input, select, and textarea needs a `<label for>`, a wrapping `<label>`, `aria-label`, or `aria-labelledby` (Disabled task-list checkboxes that Jekyll's Markdown generates are not reported.)
 - `label-for-missing`: `<label for="x">` needs an element with `id="x"`.
 - `empty-button`, `empty-link`: buttons and links need text or `aria-label`.
 - `clickable-div`: a `<div>` or `<span>` with `onclick` or `role="button"` should be a `<button>` (or an `<a href>` for navigation).

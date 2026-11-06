@@ -97,7 +97,9 @@ export function check(html) {
     }
 
     const isField = (name === 'input' && !UNLABELED_INPUT_TYPES.has((attributes.type ?? 'text').toLowerCase())) || name === 'select' || name === 'textarea';
-    if (isField && !hasName(element) && ![...ancestors(element)].some((a) => a.name === 'label') &&
+    // kramdown (GitHub Pages) renders Markdown task lists as disabled, unlabeled checkboxes; page authors can't change that.
+    const generatedTask = name === 'input' && 'disabled' in attributes && (attributes.class ?? '').split(/\s+/).includes('task-list-item-checkbox');
+    if (isField && !generatedTask && !hasName(element) && ![...ancestors(element)].some((a) => a.name === 'label') &&
         !labelTargets.has(attributes.id) && !(element.inTemplate && attributes.id)) {
       report(element, 'unlabeled-field', `<${name}${attributes.name ? ` name="${attributes.name}"` : ''}> has no label: use <label for="…">, wrap it in <label>, or add aria-label`);
     }
