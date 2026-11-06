@@ -1,6 +1,6 @@
 ---
 name: tagcheck
-description: Check HTML pages for semantic and accessibility mistakes with `npx tagcheck` (alt text, labels, fake buttons, heading levels, broken id references, undocumented TagBrush/TagAction classes and attributes, contrast, phone overflow). Use after writing or editing HTML, before calling a page done.
+description: Check HTML pages for semantic and accessibility mistakes with `npx @kovirlabs/tagcheck` (alt text, labels, fake buttons, heading levels, broken id references, undocumented TagBrush/TagAction classes and attributes, contrast, phone overflow). Use after writing or editing HTML, before calling a page done.
 ---
 
 <!-- Generated from llms.txt by scripts/build.mjs. Do not edit directly. -->
@@ -12,9 +12,9 @@ description: Check HTML pages for semantic and accessibility mistakes with `npx 
 ## Run it
 
 ```sh
-npx tagcheck page.html                 # files or folders
-npx tagcheck site/ --json              # machine-readable report
-npx tagcheck page.html --browser       # also contrast and phone overflow (needs Playwright)
+npx @kovirlabs/tagcheck page.html                 # files or folders
+npx @kovirlabs/tagcheck site/ --json              # machine-readable report
+npx @kovirlabs/tagcheck page.html --browser       # also contrast and phone overflow (needs Playwright)
 ```
 
 Exit code 0 means clean, 1 means problems to fix, 2 means bad usage. `--strict` also fails on warnings. `--ignore=rule-a,rule-b` skips rules. `--rules` lists every rule.
@@ -22,7 +22,7 @@ Exit code 0 means clean, 1 means problems to fix, 2 means bad usage. `--strict` 
 ## The loop for agents
 
 1. Write the page.
-2. Run `npx tagcheck page.html --json` (add `--browser` if Playwright is installed).
+2. Run `npx @kovirlabs/tagcheck page.html --json` (add `--browser` if Playwright is installed).
 3. For each problem, fix the HTML at `line` and `column` as the `message` says. Do not silence rules with `--ignore` unless the user asks.
 4. Run it again until `errors` is 0.
 
@@ -59,7 +59,7 @@ Warnings:
 ## Use it from code
 
 ```js
-import { check, checkFiles } from 'tagcheck';
+import { check, checkFiles } from '@kovirlabs/tagcheck';
 check('<img src="a.png">');                        // [{ line, column, level, rule, message }, …]
 await checkFiles(['site/'], { browser: true });    // the same report as --json
 ```

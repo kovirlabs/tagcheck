@@ -2,6 +2,8 @@
 
 ## 0.1.0 (unreleased)
 
+Published as `@kovirlabs/tagcheck` (the unscoped `tagcheck` name on npm belongs to an unrelated package); the command is still `tagcheck`.
+
 First version. Knows the vocabulary of TagBrush.css 1.1.0 and TagAction 0.1.0.
 
 - Static checks, adapted from `npx tagbrush check`: lang, viewport, one `<main>`, alt text, labels, empty buttons and links, fake controls, heading levels, duplicate ids, inline and `<style>` CSS on TagBrush pages.

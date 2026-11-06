@@ -3,7 +3,7 @@
 Use TagCheck when you want to catch semantic and accessibility mistakes in HTML (missing alt text and labels, fake buttons, skipped headings, broken id references, low contrast, sideways scrolling on phones) from the command line, in CI, or from an AI agent.
 
 ```sh
-npx tagcheck page.html
+npx @kovirlabs/tagcheck page.html
 ```
 
 ```
@@ -17,7 +17,7 @@ TagCheck is part of the Tag family with [TagBrush.css](https://github.com/kovirl
 
 ## Why
 
-An agent that can't look at a screen can still run a command. TagCheck gives it the same feedback a person gets from looking at the page: write the page, run `npx tagcheck page.html --json`, fix what it reports, repeat until clean.
+An agent that can't look at a screen can still run a command. TagCheck gives it the same feedback a person gets from looking at the page: write the page, run `npx @kovirlabs/tagcheck page.html --json`, fix what it reports, repeat until clean.
 
 ## Options
 
@@ -35,18 +35,18 @@ With `--browser`, pages that link TagBrush.css or TagAction from jsDelivr are se
 
 ## Rules
 
-Run `npx tagcheck --rules`, or see [`llms.txt`](llms.txt), which explains each rule and its fix.
+Run `npx @kovirlabs/tagcheck --rules`, or see [`llms.txt`](llms.txt), which explains each rule and its fix.
 
 ## In CI
 
 ```yaml
-- run: npx tagcheck site/ --strict
+- run: npx @kovirlabs/tagcheck site/ --strict
 ```
 
 ## From code
 
 ```js
-import { check, checkFiles } from 'tagcheck';
+import { check, checkFiles } from '@kovirlabs/tagcheck';
 
 check('<img src="a.png">');                      // problems in one HTML string
 await checkFiles(['site/'], { browser: true });  // the --json report for files and folders

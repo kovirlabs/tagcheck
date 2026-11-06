@@ -1,5 +1,5 @@
 // TagCheck API.
-//   import { check, checkFiles } from 'tagcheck';
+//   import { check, checkFiles } from '@kovirlabs/tagcheck';
 //   check(html)                       -> problems in one HTML string
 //   await checkFiles(paths, options)  -> report for files and folders
 

@@ -14,7 +14,7 @@ const generated = '<!-- Generated from llms.txt by scripts/build.mjs. Do not edi
 write('ai/claude/tagcheck/SKILL.md', [
   '---',
   'name: tagcheck',
-  'description: Check HTML pages for semantic and accessibility mistakes with `npx tagcheck` (alt text, labels, fake buttons, heading levels, broken id references, undocumented TagBrush/TagAction classes and attributes, contrast, phone overflow). Use after writing or editing HTML, before calling a page done.',
+  'description: Check HTML pages for semantic and accessibility mistakes with `npx @kovirlabs/tagcheck` (alt text, labels, fake buttons, heading levels, broken id references, undocumented TagBrush/TagAction classes and attributes, contrast, phone overflow). Use after writing or editing HTML, before calling a page done.',
   '---',
   '',
   generated,
@@ -23,7 +23,7 @@ write('ai/claude/tagcheck/SKILL.md', [
 ].join('\n'));
 write('ai/cursor/tagcheck.mdc', [
   '---',
-  'description: Check HTML with npx tagcheck after editing it, and fix what it reports',
+  'description: Check HTML with npx @kovirlabs/tagcheck after editing it, and fix what it reports',
   'globs: ["**/*.html", "**/*.htm"]',
   'alwaysApply: false',
   '---',

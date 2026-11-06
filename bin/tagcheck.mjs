@@ -1,10 +1,10 @@
 #!/usr/bin/env node
-// TagCheck command line: `npx tagcheck page.html [more files or folders]`
+// TagCheck command line: `npx @kovirlabs/tagcheck page.html [more files or folders]`
 
 import { pathToFileURL } from 'node:url';
 import { checkFiles, RULES, VERSION } from '../src/index.mjs';
 
-const USAGE = `Usage: npx tagcheck <file.html | folder>... [options]
+const USAGE = `Usage: npx @kovirlabs/tagcheck <file.html | folder>... [options]
 
 Finds semantic and accessibility mistakes in HTML: missing alt text and
 labels, empty buttons and links, fake buttons, skipped headings, duplicate
