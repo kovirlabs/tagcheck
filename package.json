@@ -1,25 +1,63 @@
 {
-  "name": "tagcheck",
+  "name": "@kovirlabs/tagcheck",
   "version": "0.1.0",
   "description": "Find semantic and accessibility mistakes in HTML from the command line, CI, or an AI agent: missing alt text and labels, fake buttons, skipped headings, broken id references, contrast in light and dark mode, and sideways scrolling on phones. Part of the Tag family with TagBrush.css and TagAction.",
-  "keywords": ["html", "accessibility", "a11y", "wcag", "contrast", "lint", "linter", "semantic-html", "ci", "ai-agents", "llms-txt", "tagbrush", "tagaction"],
+  "keywords": [
+    "html",
+    "accessibility",
+    "a11y",
+    "wcag",
+    "contrast",
+    "lint",
+    "linter",
+    "semantic-html",
+    "ci",
+    "ai-agents",
+    "llms-txt",
+    "tagbrush",
+    "tagaction"
+  ],
   "homepage": "https://github.com/kovirlabs/tagcheck#readme",
-  "repository": { "type": "git", "url": "git+https://github.com/kovirlabs/tagcheck.git" },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kovirlabs/tagcheck.git"
+  },
   "bugs": "https://github.com/kovirlabs/tagcheck/issues",
   "license": "Apache-2.0",
   "type": "module",
-  "exports": { ".": "./src/index.mjs", "./package.json": "./package.json" },
-  "bin": { "tagcheck": "bin/tagcheck.mjs" },
-  "files": ["bin/", "src/", "llms.txt", "ai/"],
-  "engines": { "node": ">=20" },
+  "exports": {
+    ".": "./src/index.mjs",
+    "./package.json": "./package.json"
+  },
+  "bin": {
+    "tagcheck": "bin/tagcheck.mjs"
+  },
+  "files": [
+    "bin/",
+    "src/",
+    "llms.txt",
+    "ai/"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "build": "node scripts/build.mjs",
     "test": "playwright test"
   },
-  "peerDependencies": { "playwright": ">=1.40" },
-  "peerDependenciesMeta": { "playwright": { "optional": true } },
+  "peerDependencies": {
+    "playwright": ">=1.40"
+  },
+  "peerDependenciesMeta": {
+    "playwright": {
+      "optional": true
+    }
+  },
   "devDependencies": {
     "@playwright/test": "1.64.1",
     "tagbrush": "1.1.0"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
