@@ -1,0 +1,30 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Check generated files are up to date
+        run: |
+          npm run build
+          git diff --exit-code || (echo "::error::ai/ is out of date. Run 'npm run build' and commit the result." && exit 1)
+
+      - run: npx playwright install --with-deps chromium
+        timeout-minutes: 5
+
+      - run: npx playwright test

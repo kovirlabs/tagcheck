@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Good page</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tagbrush@1/tagbrush.min.css">
+<script src="https://cdn.jsdelivr.net/npm/tagaction@0/tagaction.min.js" defer></script>
+<style>:root { --color-primary: #0f766e; }</style>
+</head>
+<body>
+<header><nav><strong>Acme</strong><ul><li><a href="/" aria-current="page">Home</a></li></ul></nav></header>
+<main>
+  <h1>Orders</h1>
+  <section data-tag-remember>
+    <h2>Help</h2>
+    <details id="help" name="faq"><summary>How do refunds work?</summary><p>Within 30 days.</p></details>
+  </section>
+  <input type="search" aria-label="Filter orders" aria-controls="orders" hidden>
+  <table id="orders" class="striped">
+    <thead><tr><th>Customer</th><th>Status</th></tr></thead>
+    <tbody><tr><td>Maya</td><td><mark data-tone="success">Paid</mark></td></tr><tr><td>Bo</td><td><mark data-tone="x" style="--tone: #db2777">Custom</mark></td></tr></tbody>
+  </table>
+  <form>
+    <label for="email">Email</label><input type="email" id="email">
+    <ul><li><label for="guest">Guest</label><input id="guest"></li>
+      <template id="more"><li><label for="guest">Guest</label><input id="guest"></li></template></ul>
+    <button type="button" commandfor="more" command="--clone" hidden>Add guest</button>
+    <button><svg viewBox="0 0 24 24" aria-hidden="true"></svg> Save</button>
+    <button aria-label="Close">✕</button>
+  </form>
+  <button commandfor="confirm" command="show-modal">Delete</button>
+  <dialog id="confirm"><form method="dialog"><p>Sure?</p><button>OK</button></form></dialog>
+  <p><time datetime="2026-11-06T17:00Z" data-tag-time="relative">Nov 6</time> <a href="/a"><img src="a.png" alt="Avatar"></a></p>
+  <nav data-tag-toc></nav>
+  <pre><code class="language-js hljs-keyword">const a = 1;</code></pre>
+</main>
+</body>
+</html>
