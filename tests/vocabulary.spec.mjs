@@ -22,9 +22,9 @@ test('every class TagBrush.css documents is known, and nothing else', () => {
 
 test('every family data attribute and value in the guides is known', () => {
   const guides = tagbrush + (tagaction ?? '');
-  const documented = new Set([...guides.matchAll(/\b(data-(?:tag[a-z-]*|theme|layout|tone))\b/g)].map((m) => m[1]));
+  const documented = new Set([...guides.matchAll(/\b(data-(?:tag[a-z-]*|theme|layout|tone|density|reasoning))\b/g)].map((m) => m[1]));
   expect([...documented].filter((name) => !(name in ATTRIBUTES))).toEqual([]);
-  for (const [, name, value] of guides.matchAll(/\b(data-(?:tag[a-z-]*|theme|layout|tone))="([^"]*)"/g)) {
+  for (const [, name, value] of guides.matchAll(/\b(data-(?:tag[a-z-]*|theme|layout|tone|density|reasoning))="([^"]*)"/g)) {
     if (ATTRIBUTES[name]) expect(ATTRIBUTES[name], `${name}="${value}"`).toContain(value);
   }
 });

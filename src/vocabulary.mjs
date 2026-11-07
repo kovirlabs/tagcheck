@@ -14,12 +14,19 @@ export const CLASSES = new Set(['button', 'secondary', 'outline', 'container', '
 export const GENERATED_CLASSES = new Set([
   'sourceCode', 'footnotes', 'footnotes-end-of-document', 'footnote-ref', 'footnote-back', 'footnote', 'reversefootnote', 'footnote-backref',
   'admonition', 'admonition-title',
+  'markdown-alert', 'markdown-alert-title', 'katex', 'katex-display',
   'task-list', 'task-list-item', 'task-list-item-checkbox', 'contains-task-list', 'math', 'inline', 'display',
   'highlight', 'highlighter-rouge', 'chroma', 'astro-code', 'shiki',
 ]);
 /** Row classes older Pandoc versions (before 3.2) put on table rows. */
 export const GENERATED_ROW_CLASSES = new Set(['header', 'odd', 'even']);
-export const GENERATED_CLASS_PREFIXES = ['language-', 'highlight-'];
+export const GENERATED_CLASS_PREFIXES = ['language-', 'highlight-', 'markdown-alert-'];
+/**
+ * Inside these, the renderer owns every class: GitHub alerts (octicon icons),
+ * KaTeX (mord, mathnormal, …), and MathJax's mjx-* elements.
+ */
+export const isGeneratedContainer = (element) => element.name.startsWith('mjx-') ||
+  (element.attributes.class ?? '').split(/\s+/).some((c) => c === 'markdown-alert' || c === 'katex' || c === 'katex-display');
 export const isGeneratedClass = (name, element) => GENERATED_CLASSES.has(name) || (element === 'tr' && GENERATED_ROW_CLASSES.has(name)) || GENERATED_CLASS_PREFIXES.some((prefix) => name.startsWith(prefix));
 
 /**
@@ -35,6 +42,8 @@ export const ATTRIBUTES = {
   'data-theme': ['light', 'dark'],
   'data-layout': ['full'],
   'data-tone': ['success', 'warning', 'error', 'info', 'neutral'],
+  'data-density': ['compact'],
+  'data-reasoning': null,
 };
 
 /** Custom commands TagAction handles (command="--…"). Built-in commands are the browser's. */

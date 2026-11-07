@@ -1,7 +1,7 @@
 // Static checks: read HTML source, report problems. No browser needed.
 
 import { parse, ancestors } from './parse.mjs';
-import { CLASSES, ATTRIBUTES, COMMANDS, BUILT_IN_COMMANDS, isFamilyAttribute, isGeneratedClass } from './vocabulary.mjs';
+import { CLASSES, ATTRIBUTES, COMMANDS, BUILT_IN_COMMANDS, isFamilyAttribute, isGeneratedClass, isGeneratedContainer } from './vocabulary.mjs';
 
 const NAMED_BY_ATTRIBUTE = ['aria-label', 'aria-labelledby', 'title'];
 const UNLABELED_INPUT_TYPES = new Set(['hidden', 'submit', 'button', 'reset', 'image']);
@@ -150,7 +150,8 @@ export function check(html) {
     }
 
     // The family's vocabulary.
-    if (attributes.class !== undefined && !inCode) {
+    const inGenerated = [element, ...ancestors(element)].some(isGeneratedContainer);
+    if (attributes.class !== undefined && !inCode && !inGenerated) {
       const classes = attributes.class.split(/\s+/);
       // Python-Markdown admonitions: class="admonition note", any type word.
       const unknown = classes.includes('admonition') ? [] : classes.filter((c) => c && !CLASSES.has(c) && !isGeneratedClass(c, name));
@@ -173,7 +174,8 @@ export function check(html) {
       }
     }
 
-    if (usesTagBrush && attributes.style !== undefined) {
+    // KaTeX and MathJax size their own spans with inline styles.
+    if (usesTagBrush && attributes.style !== undefined && !inGenerated) {
       // Column alignment in tables is content, not layout (Markdown tables emit it).
       const properties = cssProperties(`{${attributes.style}}`)
         .filter((property) => !(property === 'text-align' && (name === 'th' || name === 'td')) && !(property === 'width' && name === 'col'));

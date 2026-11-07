@@ -1,6 +1,12 @@
 # Changelog
 
-## 0.1.0 (unreleased)
+## Unreleased
+
+Knows the vocabulary of TagBrush.css 1.2.0.
+
+- TagBrush.css 1.2.0's chat output: `data-density="compact"` and `<details data-reasoning>` are documented attributes, and classes in GitHub alerts (`markdown-alert`, `markdown-alert-note`, octicon icons), KaTeX (`katex`, `katex-display`, and everything inside them), and MathJax (`mjx-*` elements), and the inline styles KaTeX and MathJax put on their spans, aren't reported.
+
+## 0.1.0 (2026-11-06)
 
 Published as `@kovirlabs/tagcheck` (the unscoped `tagcheck` name on npm belongs to an unrelated package); the command is still `tagcheck`.
 

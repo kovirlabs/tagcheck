@@ -69,6 +69,19 @@ test.describe('static rules', () => {
     expect(rules(page('<p class="odd">x</p>'))).toEqual(['warning:unknown-class']); // row classes only count on rows
   });
 
+  test('chat and AI output (GitHub alerts, KaTeX, MathJax, reasoning, compact density) is not reported', () => {
+    const chat = '<link rel="stylesheet" href="tagbrush.css"><div class="tagbrush" data-density="compact">' +
+      '<details data-reasoning><summary>Thought for 4 seconds</summary><p>x</p></details>' +
+      '<div class="markdown-alert markdown-alert-note" dir="auto"><p class="markdown-alert-title" dir="auto"><svg class="octicon octicon-info mr-2" viewBox="0 0 16 16" aria-hidden="true"></svg>Note</p><p>x</p></div>' +
+      '<p><span class="katex"><span class="katex-mathml"><math><mi>x</mi></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span></p>' +
+      '<span class="katex-display"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="mord">y</span></span></span></span>' +
+      '<mjx-container class="MathJax" jax="CHTML" display="true"><mjx-math class="MJX-TEX"><mjx-mi class="mjx-i">z</mjx-mi></mjx-math></mjx-container>' +
+      '</div>';
+    expect(rules(page(chat))).toEqual([]);
+    expect(rules(page('<div data-density="cozy">x</div>'))).toEqual(['warning:unknown-attribute']);
+    expect(rules(page('<p class="mord">x</p>'))).toEqual(['warning:unknown-class']); // only inside KaTeX output
+  });
+
   test('other data-* attributes are the page\'s own business', () => {
     expect(rules(page('<div data-user-id="7" data-testid="x">Hi</div>'))).toEqual([]);
   });
