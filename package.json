@@ -1,6 +1,6 @@
 {
   "name": "@kovirlabs/tagcheck",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Find semantic and accessibility mistakes in HTML from the command line, CI, or an AI agent: missing alt text and labels, fake buttons, skipped headings, broken id references, contrast in light and dark mode, and sideways scrolling on phones. Part of the Tag family with TagBrush.css and TagAction.",
   "keywords": [
     "html",
