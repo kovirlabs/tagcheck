@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TagCheck: find semantic and accessibility mistakes in HTML</title>
+<meta name="description" content="TagCheck finds semantic and accessibility mistakes in HTML from the command line, in CI, or from an AI agent: missing alt text and labels, fake buttons, skipped headings, broken id references, low contrast, and sideways scrolling on phones.">
+<link rel="icon" href="https://kovirlabs.github.io/tagstack/mark.svg" type="image/svg+xml">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tagbrush@1/tagbrush.min.css">
+<link rel="stylesheet" href="https://kovirlabs.github.io/tagstack/brand.css">
+<script src="https://cdn.jsdelivr.net/npm/tagaction@0/tagaction.min.js" defer></script>
+</head>
+<body>
+<header>
+  <nav aria-label="Tag family" data-brand="bar">
+    <a href="https://kovirlabs.github.io/tagstack/"><img src="https://kovirlabs.github.io/tagstack/mark.svg" alt="" width="24" height="24">Tag family</a>
+    <ul>
+      <li><a href="https://kovirlabs.github.io/tagbrush/">TagBrush.css</a></li>
+      <li><a href="https://kovirlabs.github.io/tagaction/">TagAction</a></li>
+      <li><a href="https://kovirlabs.github.io/tagcheck/" aria-current="page">TagCheck</a></li>
+      <li><a href="https://kovirlabs.github.io/tagkit/">TagKit</a></li>
+      <li><a href="https://github.com/kovirlabs/tagcheck">GitHub</a></li>
+    </ul>
+  </nav>
+  <hgroup>
+    <h1>TagCheck</h1>
+    <p>One command that finds semantic and accessibility mistakes in HTML, for people, CI, and AI agents.</p>
+  </hgroup>
+  <div role="group">
+    <a class="button" href="#install">Install and run</a>
+    <a class="button secondary" href="https://raw.githubusercontent.com/kovirlabs/tagcheck/main/llms.txt">Guide for AI agents</a>
+  </div>
+</header>
+<main>
+  <aside><nav data-tag-toc aria-label="On this page"></nav></aside>
+  <article>
+    <h2 id="finds">What it finds</h2>
+    <p>TagCheck reads HTML files and reports mistakes a person would notice by looking at the page, or by using it with a keyboard or a screen reader.</p>
+    <ul>
+      <li>Missing alt text, missing labels, and empty buttons and links.</li>
+      <li>Fake buttons: a <code>&lt;div&gt;</code> or <code>&lt;span&gt;</code> with <code>onclick</code> or <code>role="button"</code>.</li>
+      <li>Skipped heading levels, duplicate ids, and references to ids that don't exist.</li>
+      <li>Classes and <code>data-tag…</code> attributes that TagBrush.css and TagAction don't document, such as an invented <code>class="hero"</code> or <code>data-tag-sortable</code>.</li>
+      <li>With <code>--browser</code>: text contrast below WCAG AA (4.5:1) in light and dark mode, and sideways scrolling at 360px and 1280px wide.</li>
+    </ul>
+    <p>It works on any HTML page, with or without TagBrush.css and TagAction.</p>
+    <pre><code>page.html:12:3  error    missing-alt        &lt;img src="photo.jpg"&gt; needs alt text (alt="" if it's decorative)
+page.html:20:3  error    broken-reference   aria-controls="menu" on &lt;button&gt; points to an id that doesn't exist
+page.html:26:3  warning  unknown-class      class="hero" isn't part of TagBrush.css or TagAction: semantic HTML usually does the job
+1 file checked: 2 errors, 1 warning</code></pre>
+
+    <h2 id="install">Install and run</h2>
+    <p>You need Node.js 20 or later. Run it with <code>npx</code> on files or folders:</p>
+    <pre><code>npx @kovirlabs/tagcheck page.html</code></pre>
+    <p>Get a machine-readable report for agents and CI:</p>
+    <pre><code>npx @kovirlabs/tagcheck site/ --json</code></pre>
+    <p>Also check contrast and phone width in a real browser. This needs Playwright:</p>
+    <pre><code>npm install -D playwright &amp;&amp; npx playwright install chromium
+npx @kovirlabs/tagcheck page.html --browser</code></pre>
+    <p>With <code>--browser</code>, pages that link TagBrush.css or TagAction from jsDelivr get the copy installed in your project, if there is one. The check then works offline and tests your version. A stylesheet or script that still doesn't load is reported as <code>not-loaded</code>.</p>
+    <h3 id="options">Options</h3>
+    <dl>
+      <dt><code>--json</code></dt>
+      <dd>Print the report as JSON.</dd>
+      <dt><code>--browser</code></dt>
+      <dd>Also render each page in Chromium to check contrast and sideways scrolling.</dd>
+      <dt><code>--strict</code></dt>
+      <dd>Fail (exit code 1) on warnings too.</dd>
+      <dt><code>--ignore=a,b</code></dt>
+      <dd>Skip these rules.</dd>
+      <dt><code>--rules</code></dt>
+      <dd>List every rule.</dd>
+      <dt><code>--version</code></dt>
+      <dd>Print the version.</dd>
+    </dl>
+    <pre><code>npx @kovirlabs/tagcheck site/ --strict
+npx @kovirlabs/tagcheck page.html --ignore=inline-style,style-block</code></pre>
+    <h3 id="exit-codes">Exit codes</h3>
+    <table>
+      <thead><tr><th>Code</th><th>Meaning</th></tr></thead>
+      <tbody>
+        <tr><td>0</td><td>Clean.</td></tr>
+        <tr><td>1</td><td>Problems to fix. Errors only, or warnings too with <code>--strict</code>.</td></tr>
+        <tr><td>2</td><td>Bad usage, such as no files given.</td></tr>
+      </tbody>
+    </table>
+    <h3 id="ci">In CI</h3>
+    <pre><code>- run: npx @kovirlabs/tagcheck site/ --strict</code></pre>
+
+    <h2 id="json">The JSON report</h2>
+    <p><code>--json</code> prints one object for all the files. <code>browser</code> says whether the <code>--browser</code> checks ran. Browser problems have <code>line</code> and <code>column</code> set to <code>null</code>.</p>
+    <pre><code>{
+  "tool": "tagcheck",
+  "version": "0.1.1",
+  "browser": false,
+  "files": [
+    {
+      "file": "page.html",
+      "problems": [
+        {
+          "line": 6,
+          "column": 3,
+          "level": "error",
+          "rule": "missing-alt",
+          "message": "&lt;img src=\"photo.jpg\"&gt; needs alt text (alt=\"\" if it's decorative)"
+        },
+        {
+          "line": 7,
+          "column": 13,
+          "level": "warning",
+          "rule": "heading-skip",
+          "message": "&lt;h4&gt; follows &lt;h2&gt;: don't skip heading levels"
+        }
+      ]
+    }
+  ],
+  "errors": 1,
+  "warnings": 1
+}</code></pre>
+
+    <h2 id="rules">Rules</h2>
+    <p>Errors fail the check. Warnings fail it only with <code>--strict</code>. Rules marked <code>--browser</code> run only with that option. The <a href="https://raw.githubusercontent.com/kovirlabs/tagcheck/main/llms.txt">llms.txt guide</a> explains each rule and its fix.</p>
+    <table data-tagaction="off">
+      <caption>Every rule, as <code>--rules</code> lists them</caption>
+      <thead><tr><th>Rule</th><th>Level</th><th>What it reports</th></tr></thead>
+      <tbody>
+        <tr><td><code>missing-lang</code></td><td>error</td><td>&lt;html&gt; has no lang attribute</td></tr>
+        <tr><td><code>missing-viewport</code></td><td>warning</td><td>no viewport &lt;meta&gt;, so phones show a zoomed-out desktop page</td></tr>
+        <tr><td><code>multiple-main</code></td><td>error</td><td>more than one visible &lt;main&gt;</td></tr>
+        <tr><td><code>missing-alt</code></td><td>error</td><td>&lt;img&gt; without alt text</td></tr>
+        <tr><td><code>unlabeled-field</code></td><td>error</td><td>form field with no label, aria-label, or aria-labelledby</td></tr>
+        <tr><td><code>label-for-missing</code></td><td>error</td><td>&lt;label for&gt; points to an id that does not exist</td></tr>
+        <tr><td><code>empty-button</code></td><td>error</td><td>&lt;button&gt; with no text or aria-label</td></tr>
+        <tr><td><code>empty-link</code></td><td>error</td><td>&lt;a href&gt; with no text or aria-label</td></tr>
+        <tr><td><code>clickable-div</code></td><td>error</td><td>&lt;div&gt; or &lt;span&gt; used as a button or link</td></tr>
+        <tr><td><code>heading-skip</code></td><td>warning</td><td>a heading level is skipped (h2 to h4)</td></tr>
+        <tr><td><code>duplicate-id</code></td><td>error</td><td>the same id is used more than once</td></tr>
+        <tr><td><code>broken-reference</code></td><td>error</td><td>aria-controls, commandfor, for, list, or similar points to a missing id</td></tr>
+        <tr><td><code>unknown-command</code></td><td>error</td><td>command="…" is not a browser command or one TagAction handles</td></tr>
+        <tr><td><code>clone-target</code></td><td>error</td><td>command="--clone" must point at a &lt;template&gt;</td></tr>
+        <tr><td><code>remember-needs-id</code></td><td>warning</td><td>&lt;details&gt; under data-tag-remember has no id, so its state is not saved</td></tr>
+        <tr><td><code>unknown-class</code></td><td>warning</td><td>a class the Tag family does not document</td></tr>
+        <tr><td><code>unknown-attribute</code></td><td>warning</td><td>a data-tag… (or TagBrush) attribute or value the Tag family does not document</td></tr>
+        <tr><td><code>generated-markup</code></td><td>warning</td><td>markup TagAction generates (data-tag="…") was copied into the source</td></tr>
+        <tr><td><code>inline-style</code></td><td>warning</td><td>inline style sets layout or colors instead of CSS variables</td></tr>
+        <tr><td><code>style-block</code></td><td>warning</td><td>&lt;style&gt; sets properties other than CSS variables</td></tr>
+        <tr><td><code>contrast</code></td><td>error</td><td>text below WCAG AA contrast (4.5:1) in the light or dark scheme (--browser)</td></tr>
+        <tr><td><code>overflow</code></td><td>error</td><td>the page scrolls sideways at a phone width (--browser)</td></tr>
+        <tr><td><code>not-loaded</code></td><td>warning</td><td>a stylesheet or script did not load, so the browser checks measured the page without it (--browser)</td></tr>
+      </tbody>
+    </table>
+
+    <h2 id="agents">For AI agents</h2>
+    <p>An agent that can't look at a screen can still run a command. TagCheck gives it the same feedback a person gets from looking at the page.</p>
+    <ol>
+      <li>Write the page.</li>
+      <li>Run <code>npx @kovirlabs/tagcheck page.html --json</code>. Add <code>--browser</code> if Playwright is installed.</li>
+      <li>For each problem, fix the HTML at <code>line</code> and <code>column</code> as the <code>message</code> says. Don't silence rules with <code>--ignore</code> unless the user asks.</li>
+      <li>Run it again until <code>errors</code> is 0.</li>
+    </ol>
+    <p>Give your agent <a href="https://raw.githubusercontent.com/kovirlabs/tagcheck/main/llms.txt">TagCheck's llms.txt</a>. It lists every rule and its fix. The <a href="https://kovirlabs.github.io/tagstack/llms.txt">family guide</a> says how TagBrush.css, TagAction, and TagCheck fit together.</p>
+
+    <h2 id="api">From code</h2>
+    <p>Import <code>check</code> for one HTML string, or <code>checkFiles</code> for files and folders.</p>
+    <pre><code>import { check, checkFiles } from '@kovirlabs/tagcheck';
+
+check('&lt;img src="a.png"&gt;');                        // [{ line, column, level, rule, message }, …]
+await checkFiles(['site/'], { browser: true });    // the same report as --json</code></pre>
+    <p><code>checkFiles(paths, { browser, ignore })</code> takes files and folders. It skips dot folders and <code>node_modules</code>. <code>ignore</code> is a list of rule names to skip.</p>
+  </article>
+</main>
+<footer data-brand="footer">
+  <p>TagCheck is open source under Apache-2.0. Get it on <a href="https://github.com/kovirlabs/tagcheck">GitHub</a> and <a href="https://www.npmjs.com/package/@kovirlabs/tagcheck">npm</a>.</p>
+  <p>Part of the <a href="https://kovirlabs.github.io/tagstack/">Tag family</a> from Kovir Labs.</p>
+</footer>
+</body>
+</html>

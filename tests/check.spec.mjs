@@ -194,3 +194,18 @@ test.describe('llms.txt contract', () => {
     for (const file of ['ai/claude/tagcheck/SKILL.md', 'ai/cursor/tagcheck.mdc']) expect(readFileSync(file, 'utf8')).toContain(guide().trim());
   });
 });
+
+test.describe('the site (index.html)', () => {
+  test('lists every rule with its level and description, in order', () => {
+    const html = readFileSync('index.html', 'utf8');
+    const table = /<caption>Every rule[\s\S]*?<tbody>([\s\S]*?)<\/tbody>/.exec(html)[1];
+    const text = (s) => s.replace(/<[^>]+>/g, '').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&').replace(/&quot;/g, '"').trim();
+    const rows = [...table.matchAll(/<tr>([\s\S]*?)<\/tr>/g)].map((m) => [...m[1].matchAll(/<td>([\s\S]*?)<\/td>/g)].map((c) => text(c[1])));
+    expect(rows).toEqual(Object.entries(RULES).map(([rule, [level, description]]) => [rule, level, description]));
+  });
+
+  test('passes TagCheck', async () => {
+    const report = await checkFiles(['index.html']);
+    expect(report.files[0].problems).toEqual([]);
+  });
+});
