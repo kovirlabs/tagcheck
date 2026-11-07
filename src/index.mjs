@@ -22,7 +22,8 @@ export function htmlFiles(path) {
 /**
  * Check files and folders. With { browser: true }, also render each page to
  * check contrast and overflow. Returns
- * { tool, version, files: [{ file, problems }], errors, warnings }.
+ * { tool, version, browser, files: [{ file, problems }], errors, warnings }, where
+ * browser says whether the browser checks ran.
  */
 export async function checkFiles(paths, { browser = false, ignore = [] } = {}) {
   const files = paths.flatMap(htmlFiles);
@@ -34,5 +35,5 @@ export async function checkFiles(paths, { browser = false, ignore = [] } = {}) {
   }
   for (const result of results) result.problems = result.problems.filter((p) => !ignore.includes(p.rule));
   const count = (level) => results.reduce((n, r) => n + r.problems.filter((p) => p.level === level).length, 0);
-  return { tool: 'tagcheck', version: VERSION, files: results, errors: count('error'), warnings: count('warning') };
+  return { tool: 'tagcheck', version: VERSION, browser: Boolean(browser && files.length), files: results, errors: count('error'), warnings: count('warning') };
 }

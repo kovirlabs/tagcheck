@@ -12,7 +12,7 @@ test.describe('static rules', () => {
     const report = await checkFiles(['tests/fixtures/bad.html', 'tests/fixtures/good.html']);
     const [bad, good] = report.files;
     expect(good.problems).toEqual([]);
-    const staticRules = Object.keys(RULES).filter((rule) => !['contrast', 'overflow'].includes(rule));
+    const staticRules = Object.keys(RULES).filter((rule) => !['contrast', 'overflow', 'not-loaded'].includes(rule));
     expect(new Set(bad.problems.map((p) => p.rule))).toEqual(new Set(staticRules));
     expect(report.errors).toBe(13);
     expect(report.warnings).toBe(9);
@@ -110,7 +110,7 @@ test.describe('command line', () => {
   test('--json prints a machine-readable report', () => {
     const report = JSON.parse(run('tests/fixtures', '--json').stdout);
     expect(report).toMatchObject({ tool: 'tagcheck', version: expect.any(String), errors: expect.any(Number), warnings: expect.any(Number) });
-    expect(report.files.map((f) => f.file)).toEqual(['tests/fixtures/bad.html', 'tests/fixtures/good.html', 'tests/fixtures/low-contrast.html', 'tests/fixtures/redirect.html']);
+    expect(report.files.map((f) => f.file)).toEqual(['tests/fixtures/bad.html', 'tests/fixtures/good.html', 'tests/fixtures/low-contrast.html', 'tests/fixtures/not-loaded.html', 'tests/fixtures/redirect.html']);
   });
 
   test('--rules lists every rule', () => {
@@ -149,6 +149,24 @@ test.describe('--browser', () => {
       expect.objectContaining({ level: 'error', message: expect.stringMatching(/360px screen/) }),
     ]);
     expect(good.problems).toEqual([]);
+    expect(report.browser).toBe(true);
+  });
+
+  test('says when a stylesheet did not load, and serves every TagBrush.css build offline', async () => {
+    const report = await checkFiles(['tests/fixtures/not-loaded.html'], { browser: true });
+    expect(report.files[0].problems).toEqual([
+      expect.objectContaining({ level: 'warning', rule: 'not-loaded', message: expect.stringMatching(/missing\.css didn't load/) }),
+    ]);
+    const { localCopies } = await import('../src/browser.mjs');
+    const served = (url) => localCopies().find(({ pattern }) => pattern.test(url))?.path.split('/').pop();
+    expect(served('https://cdn.jsdelivr.net/npm/tagbrush@1/tagbrush.min.css')).toBe('tagbrush.css');
+    expect(served('https://cdn.jsdelivr.net/npm/tagbrush@1/tagbrush.scoped.min.css')).toBe('tagbrush.scoped.css');
+    expect(served('https://cdn.jsdelivr.net/npm/tagbrush@1/tagbrush.shadow.css')).toBe('tagbrush.shadow.css');
+    expect(served('https://cdn.jsdelivr.net/npm/tagaction@0/tagaction.min.js')).toBe('tagaction.js');
+  });
+
+  test('the report says whether the browser checks ran', async () => {
+    expect((await checkFiles(['tests/fixtures/good.html'])).browser).toBe(false);
   });
 });
 

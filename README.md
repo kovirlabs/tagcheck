@@ -31,7 +31,7 @@ An agent that can't look at a screen can still run a command. TagCheck gives it 
 
 Exit codes: 0 clean, 1 problems, 2 bad usage.
 
-With `--browser`, pages that link TagBrush.css or TagAction from jsDelivr are served the copy installed in your project, if there is one, so the check works offline and tests your version.
+With `--browser`, pages that link TagBrush.css (any build, including the scoped and Shadow DOM ones) or TagAction from jsDelivr are served the copy installed in your project, if there is one, so the check works offline and tests your version. A stylesheet or script that still doesn't load is reported (`not-loaded`), since contrast and widths measured without it mean little, and the summary (or `"browser": true` in the JSON) says the browser checks ran.
 
 ## Rules
 

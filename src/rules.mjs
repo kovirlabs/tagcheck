@@ -50,6 +50,7 @@ export const RULES = {
   'style-block': ['warning', '<style> sets properties other than CSS variables'],
   contrast: ['error', 'text below WCAG AA contrast (4.5:1) in the light or dark scheme (--browser)'],
   overflow: ['error', 'the page scrolls sideways at a phone width (--browser)'],
+  'not-loaded': ['warning', 'a stylesheet or script did not load, so the browser checks measured the page without it (--browser)'],
 };
 
 /**

@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+- `--browser` serves TagBrush.css's scoped and Shadow DOM builds from the installed package offline, as it already did the main build. Before, a chat page using the scoped build was measured without any styles when offline.
+- New `not-loaded` warning (`--browser`): a stylesheet or script didn't load, so contrast and phone width were measured without it.
+- The JSON report has `"browser": true` when the browser checks ran, and the text summary says "(with browser checks)". Agents in the family evaluation couldn't tell whether they had.
+
 ## 0.1.1 (2026-11-07)
 
 Fixes false reports on pages built by MkDocs, Hugo, and chat apps, and knows the vocabulary of TagBrush.css 1.2.0.

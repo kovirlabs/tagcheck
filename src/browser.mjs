@@ -27,11 +27,13 @@ async function loadPlaywright() {
 
 // Pages link the family's CDN files. Serve an installed copy when there is
 // one, so checks work offline and test the version the project uses.
-function localCopies() {
+export function localCopies() {
   const require = createRequire(join(process.cwd(), 'package.json'));
   const routes = [];
   for (const [pattern, name, file, contentType] of [
     [/cdn\.jsdelivr\.net\/npm\/tagbrush@[^/]+\/tagbrush(\.min)?\.css/, 'tagbrush', 'tagbrush.css', 'text/css'],
+    [/cdn\.jsdelivr\.net\/npm\/tagbrush@[^/]+\/tagbrush\.scoped(\.min)?\.css/, 'tagbrush', 'tagbrush.scoped.css', 'text/css'],
+    [/cdn\.jsdelivr\.net\/npm\/tagbrush@[^/]+\/tagbrush\.shadow(\.min)?\.css/, 'tagbrush', 'tagbrush.shadow.css', 'text/css'],
     [/cdn\.jsdelivr\.net\/npm\/tagaction@[^/]+\/tagaction(\.min)?\.js/, 'tagaction', 'tagaction.js', 'text/javascript'],
   ]) {
     try {
@@ -103,7 +105,19 @@ export async function checkInBrowser(files) {
       for (const scheme of ['light', 'dark']) {
         const page = await browser.newPage({ viewport: { width: DESKTOP_WIDTH, height: 900 }, colorScheme: scheme, reducedMotion: 'reduce' });
         for (const { pattern, path, contentType } of routes) await page.route(pattern, (route) => route.fulfill({ path, contentType }));
+        // A stylesheet or script that doesn't load (offline, a typo in the URL)
+        // would make every measurement below describe a different page.
+        const failed = new Set();
+        page.on('requestfailed', (request) => {
+          if (['stylesheet', 'script'].includes(request.resourceType())) failed.add(request.url());
+        });
+        page.on('response', (response) => {
+          if (response.status() >= 400 && ['stylesheet', 'script'].includes(response.request().resourceType())) failed.add(response.url());
+        });
         await page.goto(url, { waitUntil: 'load' });
+        if (scheme === 'light') {
+          for (const src of failed) problems.push({ line: null, column: null, level: 'warning', rule: 'not-loaded', message: `${src} didn't load, so contrast and phone width were measured without it` });
+        }
         await page.waitForTimeout(50); // let scripts like TagAction finish enhancing
         for (const { text, ratio } of await page.evaluate(lowContrast)) {
           report('contrast', `${text}: contrast ${ratio}:1 in ${scheme} mode, needs 4.5:1`);

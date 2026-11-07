@@ -50,7 +50,7 @@ export async function main(args, log = console.log) {
       }
     }
     const plural = (n, word) => `${n} ${word}${n === 1 ? '' : 's'}`;
-    log(`${plural(report.files.length, 'file')} checked: ${plural(report.errors, 'error')}, ${plural(report.warnings, 'warning')}`);
+    log(`${plural(report.files.length, 'file')} checked${report.browser ? ' (with browser checks)' : ''}: ${plural(report.errors, 'error')}, ${plural(report.warnings, 'warning')}`);
   }
   return report.errors > 0 || (flags.has('--strict') && report.warnings > 0) ? 1 : 0;
 }

@@ -27,7 +27,7 @@ Exit code 0 means clean, 1 means problems to fix, 2 means bad usage. `--strict` 
 3. For each problem, fix the HTML at `line` and `column` as the `message` says. Do not silence rules with `--ignore` unless the user asks.
 4. Run it again until `errors` is 0.
 
-The JSON report: `{ "tool": "tagcheck", "version": "…", "errors": 2, "warnings": 1, "files": [{ "file": "page.html", "problems": [{ "line": 12, "column": 3, "level": "error", "rule": "missing-alt", "message": "<img src=\"photo.jpg\"> needs alt text (alt=\"\" if it's decorative)" }] }] }`. Browser problems have `line` and `column` set to null.
+The JSON report: `{ "tool": "tagcheck", "version": "…", "browser": true, "errors": 2, "warnings": 1, "files": [{ "file": "page.html", "problems": [{ "line": 12, "column": 3, "level": "error", "rule": "missing-alt", "message": "<img src=\"photo.jpg\"> needs alt text (alt=\"\" if it's decorative)" }] }] }`. `browser` says whether the `--browser` checks ran. Browser problems have `line` and `column` set to null. Offline, the TagBrush.css and TagAction CDN files are served from the copies installed next to TagCheck, if any.
 
 ## Rules
 
@@ -49,6 +49,7 @@ Errors:
 
 Warnings:
 
+- `not-loaded` (`--browser`): a stylesheet or script didn't load (offline, or a wrong URL), so contrast and phone width were measured without it. Fix the URL, or install `tagbrush` and `tagaction` next to TagCheck to check offline.
 - `missing-viewport`: add `<meta name="viewport" content="width=device-width, initial-scale=1">`.
 - `heading-skip`: don't jump from `<h2>` to `<h4>`.
 - `remember-needs-id`: a `<details>` under `data-tag-remember` needs an `id`.
