@@ -5,7 +5,7 @@
 // Needs Playwright (`npm install -D playwright` and `npx playwright install chromium`).
 
 import { createRequire } from 'node:module';
-import { existsSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 
@@ -94,6 +94,12 @@ export async function checkInBrowser(files) {
       const problems = [];
       const report = (rule, message) => problems.push({ line: null, column: null, level: 'error', rule, message });
       const url = pathToFileURL(resolve(file)).href;
+      // A redirect page (<meta http-equiv="refresh">, as Hugo and Jekyll write for moved
+      // pages) leaves before it can be measured; its static checks still apply.
+      if (/<meta[^>]+http-equiv\s*=\s*["']?refresh/i.test(readFileSync(file, 'utf8'))) {
+        results[file] = problems;
+        continue;
+      }
       for (const scheme of ['light', 'dark']) {
         const page = await browser.newPage({ viewport: { width: DESKTOP_WIDTH, height: 900 }, colorScheme: scheme, reducedMotion: 'reduce' });
         for (const { pattern, path, contentType } of routes) await page.route(pattern, (route) => route.fulfill({ path, contentType }));

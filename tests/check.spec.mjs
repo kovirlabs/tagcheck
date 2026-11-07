@@ -97,7 +97,7 @@ test.describe('command line', () => {
   test('--json prints a machine-readable report', () => {
     const report = JSON.parse(run('tests/fixtures', '--json').stdout);
     expect(report).toMatchObject({ tool: 'tagcheck', version: expect.any(String), errors: expect.any(Number), warnings: expect.any(Number) });
-    expect(report.files.map((f) => f.file)).toEqual(['tests/fixtures/bad.html', 'tests/fixtures/good.html', 'tests/fixtures/low-contrast.html']);
+    expect(report.files.map((f) => f.file)).toEqual(['tests/fixtures/bad.html', 'tests/fixtures/good.html', 'tests/fixtures/low-contrast.html', 'tests/fixtures/redirect.html']);
   });
 
   test('--rules lists every rule', () => {
@@ -126,8 +126,9 @@ test.describe('family pages are clean', () => {
 
 test.describe('--browser', () => {
   test('finds low contrast and sideways scrolling, and passes good pages', async () => {
-    const report = await checkFiles(['tests/fixtures/low-contrast.html', 'tests/fixtures/good.html'], { browser: true });
-    const [low, good] = report.files;
+    const report = await checkFiles(['tests/fixtures/low-contrast.html', 'tests/fixtures/good.html', 'tests/fixtures/redirect.html'], { browser: true });
+    const [low, good, redirect] = report.files;
+    expect(redirect.problems).toEqual([]); // skipped by the browser checks, not crashed
     expect(low.problems.filter((p) => p.rule === 'contrast').map((p) => p.message)).toEqual([
       expect.stringMatching(/<p> Too faint to read: contrast .*light mode/),
     ]);
