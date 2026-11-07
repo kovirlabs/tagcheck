@@ -58,6 +58,7 @@ test.describe('static rules', () => {
       '<ul class="task-list"><li><label><input type="checkbox" checked>Done</label></li></ul>' +
       '<ul class="task-list"><li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" checked="checked" />Done</li></ul><span class="math inline">x</span>' +
       '<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code>x</code></pre></div></div>' +
+      '<div class="admonition warning"><p class="admonition-title">Warning</p><p>x</p></div><a class="footnote-backref" href="#t">↩</a><p id="t">t</p>' +
       '<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><ol><li id="fn1"><p>Note.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩</a></p></li></ol></section>';
     expect(rules(page(pandoc))).toEqual([]);
     expect(rules(page('<link rel="stylesheet" href="tagbrush.css"><td style="width: 50%">x</td>'))).toEqual(['warning:inline-style']);

@@ -12,7 +12,8 @@ export const CLASSES = new Set(['button', 'secondary', 'outline', 'container', '
  * (syntax highlighting) are always allowed.
  */
 export const GENERATED_CLASSES = new Set([
-  'sourceCode', 'footnotes', 'footnotes-end-of-document', 'footnote-ref', 'footnote-back', 'footnote', 'reversefootnote',
+  'sourceCode', 'footnotes', 'footnotes-end-of-document', 'footnote-ref', 'footnote-back', 'footnote', 'reversefootnote', 'footnote-backref',
+  'admonition', 'admonition-title',
   'task-list', 'task-list-item', 'task-list-item-checkbox', 'contains-task-list', 'math', 'inline', 'display',
   'highlight', 'highlighter-rouge', 'chroma', 'astro-code', 'shiki',
 ]);
