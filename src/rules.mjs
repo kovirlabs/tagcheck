@@ -100,7 +100,7 @@ export function check(html) {
     // Markdown task lists (kramdown on GitHub Pages, Goldmark in Hugo) are disabled,
     // unlabeled checkboxes at the start of a list item; page authors can't change that.
     const generatedTask = name === 'input' && (attributes.type ?? '').toLowerCase() === 'checkbox' && 'disabled' in attributes &&
-      ((attributes.class ?? '').split(/\s+/).includes('task-list-item-checkbox') || (element.parent?.name === 'li' && element.parent.children[0] === element));
+      ((attributes.class ?? '').split(/\s+/).includes('task-list-item-checkbox') || (element.parent?.name === 'li' && /^<li\b[^>]*>\s*$/i.test(html.slice(element.parent.index, element.index))));
     if (isField && !generatedTask && !hasName(element) && ![...ancestors(element)].some((a) => a.name === 'label') &&
         !labelTargets.has(attributes.id) && !(element.inTemplate && attributes.id)) {
       report(element, 'unlabeled-field', `<${name}${attributes.name ? ` name="${attributes.name}"` : ''}> has no label: use <label for="…">, wrap it in <label>, or add aria-label`);
