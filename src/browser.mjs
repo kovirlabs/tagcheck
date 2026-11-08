@@ -1,6 +1,6 @@
 // Browser checks: render each page and measure what source code can't show.
-// - contrast: every visible piece of text meets WCAG AA (4.5:1) in the light
-//   and the dark color scheme.
+// - contrast: every visible piece of text meets WCAG AA in the light and the
+//   dark color scheme: 4.5:1, or 3:1 for large text (24px, or 18.66px bold).
 // - overflow: the page doesn't scroll sideways at a phone width.
 // Needs Playwright (`npm install -D playwright` and `npx playwright install chromium`).
 
@@ -44,7 +44,8 @@ export function localCopies() {
   return routes;
 }
 
-// Runs in the page: text elements whose contrast is below 4.5:1.
+// Runs in the page: text elements below WCAG AA contrast. Large text (at least
+// 24px, or 18.66px = 14pt and bold) needs 3:1, other text 4.5:1.
 function lowContrast() {
   const ctx = document.createElement('canvas').getContext('2d', { willReadFrequently: true });
   const rgba = (color) => {
@@ -80,8 +81,11 @@ function lowContrast() {
     const bg = backdrop(el);
     const fg = over(rgba(getComputedStyle(el).color), bg);
     const [hi, lo] = [luminance(fg), luminance(bg)].sort((a, b) => b - a);
-    return { text: `<${el.localName}> ${el.textContent.trim().replace(/\s+/g, ' ').slice(0, 40)}`, ratio: Math.round(((hi + 0.05) / (lo + 0.05)) * 100) / 100 };
-  }).filter((r) => r.ratio < 4.5);
+    const style = getComputedStyle(el);
+    const size = parseFloat(style.fontSize);
+    const large = size >= 24 || (size >= 18.66 && Number(style.fontWeight) >= 700);
+    return { text: `<${el.localName}> ${el.textContent.trim().replace(/\s+/g, ' ').slice(0, 40)}`, ratio: Math.round(((hi + 0.05) / (lo + 0.05)) * 100) / 100, need: large ? 3 : 4.5 };
+  }).filter((r) => r.ratio < r.need);
 }
 
 /** Render each file and return { [file]: problems } for contrast and overflow. */
@@ -119,8 +123,8 @@ export async function checkInBrowser(files) {
           for (const src of failed) problems.push({ line: null, column: null, level: 'warning', rule: 'not-loaded', message: `${src} didn't load, so contrast and phone width were measured without it` });
         }
         await page.waitForTimeout(50); // let scripts like TagAction finish enhancing
-        for (const { text, ratio } of await page.evaluate(lowContrast)) {
-          report('contrast', `${text}: contrast ${ratio}:1 in ${scheme} mode, needs 4.5:1`);
+        for (const { text, ratio, need } of await page.evaluate(lowContrast)) {
+          report('contrast', `${text}: contrast ${ratio}:1 in ${scheme} mode, needs ${need}:1${need === 3 ? ' (large text)' : ''}`);
         }
         if (scheme === 'light') {
           for (const width of [PHONE_WIDTH, DESKTOP_WIDTH]) {

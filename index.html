@@ -41,7 +41,7 @@
       <li>Fake buttons: a <code>&lt;div&gt;</code> or <code>&lt;span&gt;</code> with <code>onclick</code> or <code>role="button"</code>.</li>
       <li>Skipped heading levels, duplicate ids, and references to ids that don't exist.</li>
       <li>Classes and <code>data-tag…</code> attributes that TagBrush.css and TagAction don't document, such as an invented <code>class="hero"</code> or <code>data-tag-sortable</code>.</li>
-      <li>With <code>--browser</code>: text contrast below WCAG AA (4.5:1) in light and dark mode, and sideways scrolling at 360px and 1280px wide.</li>
+      <li>With <code>--browser</code>: text contrast below WCAG AA (4.5:1, or 3:1 for large text) in light and dark mode, and sideways scrolling at 360px and 1280px wide.</li>
     </ul>
     <p>It works on any HTML page, with or without TagBrush.css and TagAction.</p>
     <pre><code>page.html:12:3  error    missing-alt        &lt;img src="photo.jpg"&gt; needs alt text (alt="" if it's decorative)
@@ -144,7 +144,7 @@ npx @kovirlabs/tagcheck page.html --ignore=inline-style,style-block</code></pre>
         <tr><td><code>generated-markup</code></td><td>warning</td><td>markup TagAction generates (data-tag="…") was copied into the source</td></tr>
         <tr><td><code>inline-style</code></td><td>warning</td><td>inline style sets layout or colors instead of CSS variables</td></tr>
         <tr><td><code>style-block</code></td><td>warning</td><td>&lt;style&gt; sets properties other than CSS variables</td></tr>
-        <tr><td><code>contrast</code></td><td>error</td><td>text below WCAG AA contrast (4.5:1) in the light or dark scheme (--browser)</td></tr>
+        <tr><td><code>contrast</code></td><td>error</td><td>text below WCAG AA contrast (4.5:1, or 3:1 for large text) in the light or dark scheme (--browser)</td></tr>
         <tr><td><code>overflow</code></td><td>error</td><td>the page scrolls sideways at a phone width (--browser)</td></tr>
         <tr><td><code>not-loaded</code></td><td>warning</td><td>a stylesheet or script did not load, so the browser checks measured the page without it (--browser)</td></tr>
       </tbody>

@@ -5,6 +5,7 @@
 - `--browser` serves TagBrush.css's scoped and Shadow DOM builds from the installed package offline, as it already did the main build. Before, a chat page using the scoped build was measured without any styles when offline.
 - New `not-loaded` warning (`--browser`): a stylesheet or script didn't load, so contrast and phone width were measured without it.
 - A site at https://kovirlabs.github.io/tagcheck/ (index.html, not in the npm package), in the Tag family brand. A test keeps its rules table in step with the rules.
+- `contrast` uses WCAG AA's 3:1 for large text (at least 24px, or 18.66px and bold) instead of 4.5:1 for all text. Large headings at 3:1 to 4.5:1 were reported by mistake, such as the TagBrush.css demo's hero.
 - The JSON report has `"browser": true` when the browser checks ran, and the text summary says "(with browser checks)". Agents in the family evaluation couldn't tell whether they had.
 
 ## 0.1.1 (2026-11-07)

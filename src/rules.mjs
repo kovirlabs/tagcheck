@@ -48,7 +48,7 @@ export const RULES = {
   'generated-markup': ['warning', 'markup TagAction generates (data-tag="…") was copied into the source'],
   'inline-style': ['warning', 'inline style sets layout or colors instead of CSS variables'],
   'style-block': ['warning', '<style> sets properties other than CSS variables'],
-  contrast: ['error', 'text below WCAG AA contrast (4.5:1) in the light or dark scheme (--browser)'],
+  contrast: ['error', 'text below WCAG AA contrast (4.5:1, or 3:1 for large text) in the light or dark scheme (--browser)'],
   overflow: ['error', 'the page scrolls sideways at a phone width (--browser)'],
   'not-loaded': ['warning', 'a stylesheet or script did not load, so the browser checks measured the page without it (--browser)'],
 };

@@ -24,7 +24,7 @@ An agent that can't look at a screen can still run a command. TagCheck gives it 
 | Option | |
 | --- | --- |
 | `--json` | Machine-readable report: `{ tool, version, errors, warnings, files: [{ file, problems: [{ line, column, level, rule, message }] }] }` |
-| `--browser` | Also render each page in Chromium to check text contrast (WCAG AA, 4.5:1) in light and dark mode, and sideways scrolling at 360px and 1280px. Needs Playwright: `npm install -D playwright && npx playwright install chromium` |
+| `--browser` | Also render each page in Chromium to check text contrast (WCAG AA: 4.5:1, or 3:1 for large text) in light and dark mode, and sideways scrolling at 360px and 1280px. Needs Playwright: `npm install -D playwright && npx playwright install chromium` |
 | `--strict` | Fail (exit code 1) on warnings too |
 | `--ignore=a,b` | Skip rules |
 | `--rules` | List every rule |

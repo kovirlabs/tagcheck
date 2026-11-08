@@ -143,8 +143,10 @@ test.describe('--browser', () => {
     const [low, good, redirect] = report.files;
     expect(redirect.problems).toEqual([]); // skipped by the browser checks, not crashed
     expect(low.problems.filter((p) => p.rule === 'contrast').map((p) => p.message)).toEqual([
-      expect.stringMatching(/<p> Too faint to read: contrast .*light mode/),
-    ]);
+      expect.stringMatching(/<p> Too faint to read: contrast .*light mode, needs 4\.5:1$/),
+      expect.stringMatching(/<p> Small gray text: contrast 3\.03:1 in light mode, needs 4\.5:1$/),
+      expect.stringMatching(/<p> Large but too faint: contrast .*light mode, needs 3:1 \(large text\)$/),
+    ]); // large (24px) and bold 19px gray text at 3.03:1 pass
     expect(low.problems.filter((p) => p.rule === 'overflow')).toEqual([
       expect.objectContaining({ level: 'error', message: expect.stringMatching(/360px screen/) }),
     ]);
