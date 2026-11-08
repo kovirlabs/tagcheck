@@ -1,6 +1,8 @@
 # Changelog
 
-## Unreleased
+## 0.1.2 (2026-11-08)
+
+Fixes from the family agent evaluation: browser checks that work offline with every TagBrush.css build, say when a file didn't load and when they ran, and judge large text by WCAG's 3:1.
 
 - `--browser` serves TagBrush.css's scoped and Shadow DOM builds from the installed package offline, as it already did the main build. Before, a chat page using the scoped build was measured without any styles when offline.
 - New `not-loaded` warning (`--browser`): a stylesheet or script didn't load, so contrast and phone width were measured without it.
