@@ -41,7 +41,7 @@ Errors:
 - `clickable-div`: a `<div>` or `<span>` with `onclick` or `role="button"` should be a `<button>` (or an `<a href>` for navigation).
 - `duplicate-id`: ids must be unique. Ids inside a `<template>` don't count; TagAction renumbers copies.
 - `broken-reference`: `aria-controls`, `aria-labelledby`, `aria-describedby`, `commandfor`, `popovertarget`, `list`, `form`, and `<output for>` must name ids that exist.
-- `unknown-command`: `command` must be a browser command (`show-modal`, `close`, `request-close`, `toggle-popover`, `show-popover`, `hide-popover`) or TagAction's `--clone`.
+- `unknown-command`: `command` must be a browser command (`show-modal`, `close`, `request-close`, `toggle-popover`, `show-popover`, `hide-popover`) or one TagAction handles (`--clone`, `--remove`, `--copy`, `--share`).
 - `clone-target`: `command="--clone"` must point at a `<template>`.
 - `contrast` (`--browser`): text below WCAG AA against its background in the light or dark scheme: 4.5:1, or 3:1 for large text (at least 24px, or 18.66px and bold).
 - `overflow` (`--browser`): the page scrolls sideways at 360px or 1280px wide.

@@ -2,6 +2,7 @@ import { test, expect } from '@playwright/test';
 import { spawnSync } from 'node:child_process';
 import { existsSync, readFileSync } from 'node:fs';
 import { check, checkFiles, RULES } from '../src/index.mjs';
+import { COMMANDS } from '../src/vocabulary.mjs';
 
 const run = (...args) => spawnSync(process.execPath, ['bin/tagcheck.mjs', ...args], { encoding: 'utf8' });
 const rules = (html) => check(html).map((p) => `${p.level}:${p.rule}`);
@@ -15,7 +16,9 @@ test.describe('static rules', () => {
     const staticRules = Object.keys(RULES).filter((rule) => !['contrast', 'overflow', 'not-loaded'].includes(rule));
     expect(new Set(bad.problems.map((p) => p.rule))).toEqual(new Set(staticRules));
     expect(report.errors).toBe(13);
-    expect(report.warnings).toBe(9);
+    expect(report.warnings).toBe(10);
+    // data-tag="num" (TagAction's mark on number columns) copied from a rendered page is generated markup.
+    expect(bad.problems.filter((p) => p.rule === 'generated-markup').map((p) => p.message)).toContainEqual(expect.stringContaining('data-tag="num"'));
   });
 
   test('every problem has a line, column, level, rule, and message', () => {
@@ -40,6 +43,15 @@ test.describe('static rules', () => {
   test('browser commands and TagAction commands are known; others are not', () => {
     expect(rules(page('<button commandfor="d" command="show-modal">Open</button><button commandfor="d" command="close">Close</button><dialog id="d"></dialog>'))).toEqual([]);
     expect(rules(page('<button commandfor="d" command="--open">Open</button><dialog id="d"></dialog>'))).toEqual(['error:unknown-command']);
+    expect(rules(page('<ul><li id="r"><input aria-label="Name"> <button commandfor="r" command="--remove" hidden>Remove</button></li></ul>'))).toEqual([]);
+    expect(rules(page('<input id="i" aria-label="Link" value="x" readonly><button commandfor="i" command="--copy">Copy</button><section id="s"><button commandfor="s" command="--share">Share</button></section>'))).toEqual([]);
+  });
+
+  test('new TagBrush.css and TagAction attributes and values are known', () => {
+    expect(rules(page('<header data-layout="sticky"><p>Bar</p></header><button data-tone="error">Delete</button>'))).toEqual([]);
+    expect(rules(page('<input id="n" aria-label="Nights" value="2"><output for="n" data-tag-calc="product" data-tag-format="USD">2</output><select data-tag-theme aria-label="Theme"></select>'))).toEqual([]);
+    expect(rules(page('<input id="p" aria-label="Password" type="password"><input aria-label="Confirm" type="password" data-tag-match="p">'))).toEqual([]);
+    expect(rules(page('<header data-layout="fixed"><p>Bar</p></header>'))).toEqual(['warning:unknown-attribute']);
   });
 
   test('popovertarget, list, and output for are checked', () => {
@@ -104,7 +116,7 @@ test.describe('command line', () => {
   test('text output names file:line:column, level, and rule, then a summary', () => {
     const { stdout } = run('tests/fixtures/bad.html');
     expect(stdout).toMatch(/^tests\/fixtures\/bad\.html:12:3 {2}error {4}missing-alt/m);
-    expect(stdout).toMatch(/1 file checked: 13 errors, 9 warnings/);
+    expect(stdout).toMatch(/1 file checked: 13 errors, 10 warnings/);
   });
 
   test('--json prints a machine-readable report', () => {
@@ -189,7 +201,7 @@ test.describe('llms.txt contract', () => {
 
   test('every option llms.txt mentions exists in --help', () => {
     const help = run('--help').stdout;
-    for (const [option] of guide().matchAll(/--[a-z]+/g)) if (option !== '--clone') expect(help, option).toContain(option);
+    for (const [option] of guide().matchAll(/--[a-z]+/g)) if (!COMMANDS.has(option)) expect(help, option).toContain(option); // TagAction commands aren't options
   });
 
   test('generated agent files match llms.txt', () => {

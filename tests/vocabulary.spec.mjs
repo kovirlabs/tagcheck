@@ -8,13 +8,16 @@ const read = (...paths) => {
   const path = paths.find((p) => existsSync(p));
   return path ? readFileSync(path, 'utf8') : null;
 };
-const tagbrush = read('node_modules/tagbrush/llms.txt');
-const tagaction = read('node_modules/tagaction/llms.txt', '../tagaction/llms.txt');
+// A checkout next to this repo is newer than the installed release, so it
+// comes first; CI, without one, checks against the installed packages.
+const tagbrush = read('../tagbrush/llms.txt', 'node_modules/tagbrush/llms.txt');
+const tagaction = read('../tagaction/llms.txt', 'node_modules/tagaction/llms.txt');
 
 test('every class TagBrush.css documents is known, and nothing else', () => {
   const documented = new Set([
     ...[...tagbrush.matchAll(/class="([^"]+)"/g)].flatMap((m) => m[1].split(/\s+/)),
-    ...[...tagbrush.matchAll(/`\.([a-z][a-z-]*)`/g)].map((m) => m[1]),
+    // `.pdf`, `.docx`, … are file endings (document links), not classes
+    ...[...tagbrush.matchAll(/`\.([a-z][a-z-]*)`/g)].map((m) => m[1]).filter((name) => !['pdf', 'doc', 'docx', 'xls', 'xlsx', 'csv', 'zip'].includes(name)),
     'tagbrush', // the scoped build's wrapper class (README)
   ]);
   expect([...documented].sort()).toEqual([...CLASSES].sort());
