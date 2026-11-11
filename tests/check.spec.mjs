@@ -54,6 +54,11 @@ test.describe('static rules', () => {
     expect(rules(page('<header data-layout="fixed"><p>Bar</p></header>'))).toEqual(['warning:unknown-attribute']);
   });
 
+  test('an interestfor tooltip trigger must name its popover', () => {
+    expect(rules(page('<button interestfor="tip" aria-describedby="tip">Save</button><div popover="hint" id="tip" role="tooltip">Saves a draft</div>'))).toEqual([]);
+    expect(rules(page('<button interestfor="nope">Save</button>'))).toEqual(['error:broken-reference']);
+  });
+
   test('popovertarget, list, and output for are checked', () => {
     expect(rules(page('<button popovertarget="p">P</button><input aria-label="x" list="l"><output for="a b"></output>'))).toEqual(
       ['error:broken-reference', 'error:broken-reference', 'error:broken-reference', 'error:broken-reference']);
