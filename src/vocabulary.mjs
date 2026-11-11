@@ -39,15 +39,19 @@ export const ATTRIBUTES = {
   'data-tag-remember': null,
   'data-tag-time': ['relative'],
   'data-tag-toc': null,
+  'data-tag-calc': ['product'],
+  'data-tag-format': null, // a currency code (USD, EUR), percent, or number
+  'data-tag-theme': null,
+  'data-tag-match': null,
   'data-theme': ['light', 'dark'],
-  'data-layout': ['full'],
+  'data-layout': ['full', 'sticky'],
   'data-tone': ['success', 'warning', 'error', 'info', 'neutral'],
   'data-density': ['compact'],
   'data-reasoning': null,
 };
 
 /** Custom commands TagAction handles (command="--…"). Built-in commands are the browser's. */
-export const COMMANDS = new Set(['--clone']);
+export const COMMANDS = new Set(['--clone', '--remove', '--copy', '--share']);
 export const BUILT_IN_COMMANDS = new Set(['show-modal', 'close', 'request-close', 'toggle-popover', 'show-popover', 'hide-popover']);
 
 /** Namespaces the family owns: an undocumented attribute here is a mistake. */

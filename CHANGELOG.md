@@ -1,5 +1,15 @@
 # Changelog
 
+## Unreleased
+
+Knows TagAction's and TagBrush.css's next releases.
+
+- `--remove` (remove a repeated row), `--copy`, and `--share` are TagAction commands, so `unknown-command` no longer reports them.
+- `data-tag-calc="product"`, `data-tag-format`, `data-tag-theme`, and `data-tag-match` are documented TagAction attributes, and `data-layout="sticky"` (a header that stays at the top) a TagBrush.css value. `data-tone` on a `<button>` (a red Delete button) was already known.
+- `broken-reference` also checks `interestfor`, the trigger of a TagBrush.css tooltip (`popover="hint"`).
+- `data-tag="num"`, which TagAction puts on number columns while the page runs, is reported as `generated-markup` when it's copied into source HTML, like every `data-tag="…"`.
+- The vocabulary test reads `llms.txt` from TagBrush.css and TagAction checkouts next to this repo when there are any, before the installed packages, so it checks against the unreleased guides. The TagAction demo and test pages are clean again.
+
 ## 0.1.2 (2026-11-08)
 
 Fixes from the family agent evaluation: browser checks that work offline with every TagBrush.css build, say when a file didn't load and when they ran, and judge large text by WCAG's 3:1.

@@ -13,6 +13,7 @@ const REFERENCES = {
   'aria-describedby': null,
   commandfor: null,
   popovertarget: null,
+  interestfor: null,
   list: ['input'],
   form: ['button', 'fieldset', 'input', 'object', 'output', 'select', 'textarea'],
 };
