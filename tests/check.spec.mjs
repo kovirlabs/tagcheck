@@ -127,7 +127,7 @@ test.describe('command line', () => {
   test('--json prints a machine-readable report', () => {
     const report = JSON.parse(run('tests/fixtures', '--json').stdout);
     expect(report).toMatchObject({ tool: 'tagcheck', version: expect.any(String), errors: expect.any(Number), warnings: expect.any(Number) });
-    expect(report.files.map((f) => f.file)).toEqual(['tests/fixtures/bad.html', 'tests/fixtures/good.html', 'tests/fixtures/low-contrast.html', 'tests/fixtures/not-loaded.html', 'tests/fixtures/redirect.html']);
+    expect(report.files.map((f) => f.file)).toEqual(['tests/fixtures/bad.html', 'tests/fixtures/good.html', 'tests/fixtures/low-contrast.html', 'tests/fixtures/not-loaded.html', 'tests/fixtures/redirect.html', 'tests/fixtures/remote-image.html']);
   });
 
   test('--rules lists every rule', () => {
@@ -182,6 +182,13 @@ test.describe('--browser', () => {
     expect(served('https://cdn.jsdelivr.net/npm/tagbrush@1/tagbrush.scoped.min.css')).toBe('tagbrush.scoped.css');
     expect(served('https://cdn.jsdelivr.net/npm/tagbrush@1/tagbrush.shadow.css')).toBe('tagbrush.shadow.css');
     expect(served('https://cdn.jsdelivr.net/npm/tagaction@0/tagaction.min.js')).toBe('tagaction.js');
+  });
+
+  test('does not wait for photos from other sites', async () => {
+    const started = Date.now();
+    const report = await checkFiles(['tests/fixtures/remote-image.html'], { browser: true });
+    expect(report.files[0].problems).toEqual([]);
+    expect(Date.now() - started).toBeLessThan(10000); // a stalled image held each page for 30 seconds
   });
 
   test('the report says whether the browser checks ran', async () => {

@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.3 (2026-11-12)
+
+- `--browser` no longer waits for photos from other sites: they get a blank stand-in, since contrast and phone width don't depend on them. A slow or unreachable image host used to hold each page for up to 30 seconds in each color scheme, so a site with many linked photos (TagKit's templates and nonprofit starter) ran for minutes. Images with a `width` and `height` keep their size.
+
 ## 0.1.2 (2026-11-12)
 
 Knows TagAction's and TagBrush.css's next releases.

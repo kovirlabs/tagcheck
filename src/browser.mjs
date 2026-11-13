@@ -11,6 +11,7 @@ import { pathToFileURL } from 'node:url';
 
 export const PHONE_WIDTH = 360;
 export const DESKTOP_WIDTH = 1280;
+const BLANK_GIF = Buffer.from('R0lGODlhAQABAAAAACH5BAEAAAAALAAAAAABAAEAAAIBRAA7', 'base64');
 
 async function loadPlaywright() {
   const require = createRequire(join(process.cwd(), 'package.json'));
@@ -108,6 +109,10 @@ export async function checkInBrowser(files) {
       }
       for (const scheme of ['light', 'dark']) {
         const page = await browser.newPage({ viewport: { width: DESKTOP_WIDTH, height: 900 }, colorScheme: scheme, reducedMotion: 'reduce' });
+        // Photos from other sites get a blank stand-in: neither check needs
+        // them, and a slow or unreachable image host would stall the page's
+        // load (and every page after it) for up to 30 seconds.
+        await page.route(/^https?:/, (route) => route.request().resourceType() === 'image' ? route.fulfill({ contentType: 'image/gif', body: BLANK_GIF }) : route.fallback());
         for (const { pattern, path, contentType } of routes) await page.route(pattern, (route) => route.fulfill({ path, contentType }));
         // A stylesheet or script that doesn't load (offline, a typo in the URL)
         // would make every measurement below describe a different page.

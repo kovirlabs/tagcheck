@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A photo from a slow host</title>
+<style>img { max-width: 100%; height: auto; }</style>
+</head>
+<body>
+<main>
+  <h1>A photo from a slow host</h1>
+  <!-- 10.255.255.1 never answers, like an image host that's down or slow. -->
+  <img src="http://10.255.255.1/photo.jpg" alt="A bowl of strawberries" width="600" height="450">
+  <p>The browser checks shouldn't wait for this photo.</p>
+</main>
+</body>
+</html>
