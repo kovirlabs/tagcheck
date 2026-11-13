@@ -55,7 +55,7 @@
   },
   "devDependencies": {
     "@playwright/test": "1.64.1",
-    "tagaction": "^0.1.0",
+    "tagaction": "^0.2.0",
     "tagbrush": "1.2.0"
   },
   "publishConfig": {
